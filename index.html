@@ -58,6 +58,71 @@ Online Bouwmanager 2026
 
 </section>
 
+<!-- QUICK SELECTOR SECTION -->
+<section class="quick-selector-section">
+    <div style="font-family:Arial; max-width:900px; margin:auto; background: white; padding: 20px; border-radius: 8px;">
+        <h2>🏗️ Snelle Calculator - Vul uw project in</h2>
+
+        <!-- TYPE -->
+        <div class="form-group">
+            <label>Type werk:</label><br>
+            <select id="type" onchange="quickCalc()">
+                <option value="verbouwing">Verbouwing</option>
+                <option value="aanbouw">Aanbouw</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Oppervlakte (m²):</label><br>
+            <input type="number" id="m2" value="40" min="10" max="200" oninput="quickCalc()">
+        </div>
+
+        <div class="form-group">
+            <label>Kwaliteit:</label><br>
+            <select id="kwaliteit" onchange="quickCalc()">
+                <option value="basis">Basis</option>
+                <option value="midden">Midden</option>
+                <option value="luxe">Luxe</option>
+            </select>
+        </div>
+
+        <hr>
+
+        <!-- INSTALLATIES -->
+        <h3>Keuken, badkamer & installaties</h3>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="keuken" onchange="quickCalc()"> Keuken</label>
+            <label><input type="checkbox" id="badkamer" onchange="quickCalc()"> Badkamer</label>
+            <label><input type="checkbox" id="elektra" onchange="quickCalc()"> Elektra</label>
+            <label><input type="checkbox" id="verwarming" onchange="quickCalc()"> Verwarming / warmtepomp</label>
+        </div>
+
+        <!-- BOUWKUNDIG -->
+        <h3>Bouwkundige werkzaamheden</h3>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="sloopwerk" onchange="quickCalc()"> Sloopwerk</label>
+            <label><input type="checkbox" id="dakkapel" onchange="quickCalc()"> Dakkapel / dakopbouw</label>
+            <label><input type="checkbox" id="kozijnen" onchange="quickCalc()"> Kozijnen</label>
+            <label><input type="checkbox" id="vloeren" onchange="quickCalc()"> Vloeren</label>
+        </div>
+
+        <!-- DUURZAAM -->
+        <h3>Duurzaamheid & vergunning</h3>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="isolatie" onchange="quickCalc()"> Isolatie</label>
+            <label><input type="checkbox" id="zonnepanelen" onchange="quickCalc()"> Zonnepanelen</label>
+        </div>
+
+        <hr>
+
+        <!-- QUICK RESULT -->
+        <div class="quick-result">
+            <h3>Geschatte kosten: <span id="quickEstimate">€0</span></h3>
+            <button onclick="applyQuickSelection()" class="btn-apply">➕ Toevoegen aan calculator</button>
+        </div>
+    </div>
+</section>
+
 <section class="table">
     <table>
         <thead>
