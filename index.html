@@ -1,155 +1,81 @@
+<!-- =========================
+index.html
+Online Bouwmanager 2026
+========================= -->
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouwkosten Calculator</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Online Bouwmanager 2026</title>
+    <link rel="stylesheet" href="styles.css"/>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>🏗️ Bouwkosten Calculator</h1>
-            <p>Bereken de totale kosten van uw bouwproject</p>
-        </header>
 
-        <main>
-            <!-- Project Info Section -->
-            <section class="project-info">
-                <h2>Projectgegevens</h2>
-                <div class="form-group">
-                    <label for="projectName">Projectnaam</label>
-                    <input type="text" id="projectName" placeholder="Bijv. Keukenrenovatie">
-                </div>
-                <div class="form-group">
-                    <label for="projectBudget">Totaal Budget (optioneel)</label>
-                    <input type="number" id="projectBudget" placeholder="10000" min="0">
-                </div>
-                <button class="btn btn-primary" onclick="saveProject()">Project Opslaan</button>
-            </section>
+<header class="header">
+    <h1>Online Bouwmanager 2026</h1>
+    <p>Professionele bouwkosten calculator</p>
+</header>
 
-            <!-- Add Cost Item Section -->
-            <section class="add-cost-section">
-                <h2>Voeg Kostpost In</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="costCategory">Categorie</label>
-                        <select id="costCategory">
-                            <option value="">-- Selecteer categorie --</option>
-                            <option value="Materialen">Materialen</option>
-                            <option value="Arbeid">Arbeid</option>
-                            <option value="Vergunningen">Vergunningen</option>
-                            <option value="Gereedschappen">Gereedschappen</option>
-                            <option value="Transport">Transport</option>
-                            <option value="Overig">Overig</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="costDescription">Omschrijving</label>
-                        <input type="text" id="costDescription" placeholder="Bijv. Keramische tegels">
-                    </div>
-                    <div class="form-group">
-                        <label for="costAmount">Bedrag (€)</label>
-                        <input type="number" id="costAmount" placeholder="0.00" min="0" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="costQuantity">Aantal</label>
-                        <input type="number" id="costQuantity" placeholder="1" min="1" value="1">
-                    </div>
-                </div>
-                <button class="btn btn-success" onclick="addCost()">Kostpost Toevoegen</button>
-            </section>
+<section class="grid">
 
-            <!-- Budget Alert -->
-            <section id="budgetAlertSection" class="budget-alert" style="display: none;">
-                <div class="alert alert-warning">
-                    <strong>⚠️ Budgetwaarschuwing!</strong>
-                    <p id="budgetMessage"></p>
-                </div>
-            </section>
+    <div class="card">
+        <h2>Project</h2>
+        <input id="projectName" placeholder="Projectnaam"/>
+        <input id="projectBudget" type="number" placeholder="Budget (€)"/>
 
-            <!-- Cost Overview Section -->
-            <section class="cost-overview">
-                <h2>Kostenenglijst</h2>
-                
-                <!-- Filter and Sort -->
-                <div class="filter-bar">
-                    <input type="text" id="searchCost" placeholder="Zoeken in omschrijving..." onkeyup="filterCosts()">
-                    <select id="filterCategory" onchange="filterCosts()">
-                        <option value="">Alle categorieën</option>
-                        <option value="Materialen">Materialen</option>
-                        <option value="Arbeid">Arbeid</option>
-                        <option value="Vergunningen">Vergunningen</option>
-                        <option value="Gereedschappen">Gereedschappen</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Overig">Overig</option>
-                    </select>
-                </div>
+        <select id="regionFactor">
+            <option value="0.95">Noord</option>
+            <option value="0.97">Oost</option>
+            <option value="1.00" selected>Zuid</option>
+            <option value="1.10">West</option>
+            <option value="1.15">Randstad</option>
+        </select>
 
-                <!-- Cost Table -->
-                <div class="table-responsive">
-                    <table class="cost-table">
-                        <thead>
-                            <tr>
-                                <th>Categorie</th>
-                                <th>Omschrijving</th>
-                                <th>Eenheidsprijs</th>
-                                <th>Aantal</th>
-                                <th>Totaal</th>
-                                <th>Acties</th>
-                            </tr>
-                        </thead>
-                        <tbody id="costTableBody">
-                            <tr class="empty-state">
-                                <td colspan="6">Nog geen kostposten ingevoerd</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Summary Section -->
-            <section class="summary">
-                <div class="summary-cards">
-                    <div class="summary-card">
-                        <h3>Totale Kosten</h3>
-                        <p class="summary-value" id="totalCost">€ 0,00</p>
-                    </div>
-                    <div class="summary-card" id="remainingBudgetCard" style="display: none;">
-                        <h3>Resterend Budget</h3>
-                        <p class="summary-value" id="remainingBudget">€ 0,00</p>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Aantal Posten</h3>
-                        <p class="summary-value" id="itemCount">0</p>
-                    </div>
-                </div>
-
-                <!-- Category Breakdown -->
-                <div class="breakdown-section">
-                    <h3>Kostenverdeling per Categorie</h3>
-                    <div id="categoryBreakdown" class="breakdown-list">
-                        <!-- Dynamisch gegenereerd -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- Export Section -->
-            <section class="export-section">
-                <h2>Export & Delen</h2>
-                <div class="button-group">
-                    <button class="btn btn-secondary" onclick="exportToCSV()">📥 Exporteren naar CSV</button>
-                    <button class="btn btn-secondary" onclick="printReport()">🖨️ Afdrukken</button>
-                    <button class="btn btn-danger" onclick="clearAll()">🗑️ Alles Wissen</button>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <p>&copy; 2026 Bouwkosten Calculator | Gebouwd voor bouwliefhebbers</p>
-        </footer>
+        <button onclick="saveProject()">Opslaan</button>
     </div>
 
-    <script src="script.js"></script>
+    <div class="card">
+        <h2>Kost toevoegen</h2>
+
+        <select id="category"></select>
+        <select id="description"></select>
+
+        <input id="quantity" type="number" placeholder="Aantal"/>
+
+        <button onclick="addCost()">Toevoegen</button>
+    </div>
+
+    <div class="card summary">
+        <h2>Overzicht</h2>
+        <p>Direct: <span id="directCost">€0</span></p>
+        <p>AK: <span id="ak">€0</span></p>
+        <p>W&R: <span id="wr">€0</span></p>
+        <p>BTW: <span id="btw">€0</span></p>
+        <h3>Totaal: <span id="total">€0</span></h3>
+    </div>
+
+</section>
+
+<section class="table">
+    <table>
+        <thead>
+        <tr>
+            <th>Categorie</th>
+            <th>Omschrijving</th>
+            <th>Eenheid</th>
+            <th>Aantal</th>
+            <th>Prijs</th>
+            <th>Totaal</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+    </table>
+</section>
+
+<script src="app.js"></script>
 </body>
 </html>
+```
