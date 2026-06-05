@@ -31,6 +31,7 @@ input, select, button {
     width: 100%;
     margin: 5px 0;
     padding: 8px;
+    box-sizing: border-box;
 }
 
 button {
@@ -38,10 +39,74 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 button:hover {
     background: #1d4ed8;
+}
+
+.btn-apply {
+    background: #10b981;
+    font-weight: bold;
+    padding: 12px;
+    font-size: 16px;
+}
+
+.btn-apply:hover {
+    background: #059669;
+}
+
+/* Quick Selector Section */
+.quick-selector-section {
+    padding: 20px;
+    background: #f9fafb;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #1f2937;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.quick-result {
+    background: #ecfdf5;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+    border: 2px solid #10b981;
+}
+
+.quick-result h3 {
+    color: #047857;
+    margin: 0 0 15px 0;
+    font-size: 24px;
 }
 
 .table {
@@ -57,9 +122,31 @@ table {
 th, td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #f3f4f6;
+    font-weight: bold;
+    color: #1f2937;
 }
 
 .summary {
     font-size: 14px;
 }
-```
+
+.summary h3 {
+    color: #1f2937;
+    margin: 10px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+}
