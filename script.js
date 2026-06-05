@@ -11,21 +11,77 @@ let project = {
 };
 
 // =========================
-// PRIJZEN 2026
+// PRIJZEN 2026 - NEDERLAND
 // =========================
 
 const PRICES = {
     "Sloopwerk": {
-        "Binnenwand slopen": { unit: "m²", price: 45 },
-        "Vloer verwijderen": { unit: "m²", price: 22 }
+        "Binnenwand slopen (m²)": { unit: "m²", price: 45 },
+        "Buitenwand slopen (m²)": { unit: "m²", price: 85 },
+        "Vloer verwijderen (m²)": { unit: "m²", price: 35 },
+        "Dak/dakpannen verwijderen (m²)": { unit: "m²", price: 65 },
+        "Dakbeschot verwijderen (m²)": { unit: "m²", price: 28 }
     },
     "Metselwerk": {
-        "Kalkzandsteen": { unit: "m²", price: 95 },
-        "Baksteen": { unit: "m²", price: 165 }
+        "Kalkzandsteen muur (m²)": { unit: "m²", price: 95 },
+        "Baksteen muur (m²)": { unit: "m²", price: 165 },
+        "Isolatiebaksteen (m²)": { unit: "m²", price: 145 },
+        "Cellenbeton blokken (m²)": { unit: "m²", price: 72 },
+        "Voegen herstellen (m²)": { unit: "m²", price: 38 }
     },
-    "Installatie": {
-        "Stopcontact": { unit: "st", price: 95 },
-        "Lichtpunt": { unit: "st", price: 85 }
+    "Timmerwerk": {
+        "Houten vloer (m²)": { unit: "m²", price: 125 },
+        "Ondervloering (m²)": { unit: "m²", price: 45 },
+        "Dakconstructie (m²)": { unit: "m²", price: 185 },
+        "Deurkozijn plaatsen (stuks)": { unit: "st", price: 95 },
+        "Raamkozijn plaatsen (stuks)": { unit: "st", price: 185 }
+    },
+    "Elektriciteit": {
+        "Stopcontact plaatsen (stuks)": { unit: "st", price: 95 },
+        "Lichtpunt plaatsen (stuks)": { unit: "st", price: 85 },
+        "Schakelaar plaatsen (stuks)": { unit: "st", price: 75 },
+        "Groepenkast vervangen (stuks)": { unit: "st", price: 425 },
+        "Elektriciteit aansluiting (m)": { unit: "m", price: 35 }
+    },
+    "Sanitair": {
+        "Toilet plaatsen (stuks)": { unit: "st", price: 185 },
+        "Wastafel plaatsen (stuks)": { unit: "st", price: 145 },
+        "Douche installeren (stuks)": { unit: "st", price: 325 },
+        "Badkamer tegels (m²)": { unit: "m²", price: 85 },
+        "Loodgieter werkzaamheden (uur)": { unit: "uur", price: 65 }
+    },
+    "Afwerking": {
+        "Pleisterwerk (m²)": { unit: "m²", price: 32 },
+        "Muurverf (m²)": { unit: "m²", price: 18 },
+        "Vloertegel (m²)": { unit: "m²", price: 72 },
+        "Vinyl vloer (m²)": { unit: "m²", price: 52 },
+        "Behang (m²)": { unit: "m²", price: 28 },
+        "Deurkruk montage (stuks)": { unit: "st", price: 25 }
+    },
+    "Isolatie & Thermisch": {
+        "Muurisolatie (m²)": { unit: "m²", price: 48 },
+        "Dakisolatie (m²)": { unit: "m²", price: 42 },
+        "Vloerisolatie (m²)": { unit: "m²", price: 35 },
+        "Double glazing raam (m²)": { unit: "m²", price: 275 },
+        "Deur isoleren (stuks)": { unit: "st", price: 165 }
+    },
+    "Dakbedekking": {
+        "Dakpan leggen (m²)": { unit: "m²", price: 55 },
+        "Bitumen dakbedekking (m²)": { unit: "m²", price: 42 },
+        "Zinkwerk/goten (m)": { unit: "m", price: 28 },
+        "Dakramen plaatsen (stuks)": { unit: "st", price: 245 }
+    },
+    "Schilderwerk": {
+        "Muur schilderen (m²)": { unit: "m²", price: 18 },
+        "Plafond schilderen (m²)": { unit: "m²", price: 22 },
+        "Deur/Raam schilderen (stuks)": { unit: "st", price: 35 },
+        "Grondlaag aanbrengen (m²)": { unit: "m²", price: 12 }
+    },
+    "Bouwhuisvesting": {
+        "Locatietoilet huur/maand": { unit: "maand", price: 145 },
+        "Bouwkeet huur/week": { unit: "week", price: 125 },
+        "Afzetting/hekwerk (m)": { unit: "m", price: 15 },
+        "Steiger huur/week (m²)": { unit: "week", price: 8 }
     }
 };
 
@@ -168,4 +224,3 @@ function load() {
     const p = localStorage.getItem("project");
     if (p) project = JSON.parse(p);
 }
-```
