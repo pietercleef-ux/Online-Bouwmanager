@@ -86,6 +86,89 @@ const PRICES = {
     }
 };
 
+// =========================
+// SNELLE CALCULATOR PRIJZEN
+// =========================
+
+const QUICK_PRICES = {
+    "verbouwing": {
+        "basis": {
+            keuken: 8000,
+            badkamer: 6000,
+            elektra: 3500,
+            verwarming: 4000,
+            sloopwerk: 2000,
+            dakkapel: 15000,
+            kozijnen: 5000,
+            vloeren: 4000,
+            isolatie: 3000,
+            zonnepanelen: 12000
+        },
+        "midden": {
+            keuken: 12000,
+            badkamer: 9000,
+            elektra: 4500,
+            verwarming: 5500,
+            sloopwerk: 3000,
+            dakkapel: 20000,
+            kozijnen: 7000,
+            vloeren: 6000,
+            isolatie: 4500,
+            zonnepanelen: 15000
+        },
+        "luxe": {
+            keuken: 18000,
+            badkamer: 13000,
+            elektra: 6000,
+            verwarming: 7500,
+            sloopwerk: 4000,
+            dakkapel: 25000,
+            kozijnen: 10000,
+            vloeren: 9000,
+            isolatie: 6500,
+            zonnepanelen: 18000
+        }
+    },
+    "aanbouw": {
+        "basis": {
+            keuken: 5000,
+            badkamer: 4000,
+            elektra: 2500,
+            verwarming: 3000,
+            sloopwerk: 0,
+            dakkapel: 0,
+            kozijnen: 3500,
+            vloeren: 3000,
+            isolatie: 2500,
+            zonnepanelen: 10000
+        },
+        "midden": {
+            keuken: 8000,
+            badkamer: 6000,
+            elektra: 3500,
+            verwarming: 4000,
+            sloopwerk: 0,
+            dakkapel: 0,
+            kozijnen: 5000,
+            vloeren: 4500,
+            isolatie: 3500,
+            zonnepanelen: 12000
+        },
+        "luxe": {
+            keuken: 12000,
+            badkamer: 9000,
+            elektra: 5000,
+            verwarming: 6000,
+            sloopwerk: 0,
+            dakkapel: 0,
+            kozijnen: 7500,
+            vloeren: 6500,
+            isolatie: 5500,
+            zonnepanelen: 15000
+        }
+    }
+};
+
 // AK / W&R / BTW
 const SETTINGS = {
     ak: 0.08,
@@ -163,6 +246,65 @@ function addCost() {
     });
 
     render();
+}
+
+// =========================
+// SNELLE CALCULATOR
+// =========================
+
+function quickCalc() {
+    const type = document.getElementById("type").value;
+    const m2 = +document.getElementById("m2").value;
+    const kwaliteit = document.getElementById("kwaliteit").value;
+
+    const basePrices = QUICK_PRICES[type][kwaliteit];
+
+    let totalCost = 0;
+
+    // Controleer alle checkboxes en tel op
+    const checkboxes = ["keuken", "badkamer", "elektra", "verwarming", "sloopwerk", "dakkapel", "kozijnen", "vloeren", "isolatie", "zonnepanelen"];
+
+    checkboxes.forEach(checkbox => {
+        const element = document.getElementById(checkbox);
+        if (element && element.checked) {
+            totalCost += basePrices[checkbox];
+        }
+    });
+
+    // Vermenigvuldig met oppervlakte (per m²)
+    const estimate = totalCost * (m2 / 40); // 40m² is basis
+
+    document.getElementById("quickEstimate").innerText = "€" + estimate.toFixed(2);
+}
+
+function applyQuickSelection() {
+    const type = document.getElementById("type").value;
+    const m2 = +document.getElementById("m2").value;
+    const kwaliteit = document.getElementById("kwaliteit").value;
+
+    const basePrices = QUICK_PRICES[type][kwaliteit];
+
+    const checkboxes = ["keuken", "badkamer", "elektra", "verwarming", "sloopwerk", "dakkapel", "kozijnen", "vloeren", "isolatie", "zonnepanelen"];
+
+    checkboxes.forEach(checkbox => {
+        const element = document.getElementById(checkbox);
+        if (element && element.checked) {
+            const pricePerM2 = basePrices[checkbox] / 40; // Deel door basis m²
+            const totalPrice = pricePerM2 * m2;
+
+            costs.push({
+                cat: "Snelle Selectie",
+                desc: checkbox.charAt(0).toUpperCase() + checkbox.slice(1) + ` (${kwaliteit})`,
+                unit: "m²",
+                qty: m2,
+                unitPrice: pricePerM2,
+                total: totalPrice
+            });
+        }
+    });
+
+    render();
+    alert("✅ Geselecteerde items toegevoegd aan de calculator!");
 }
 
 // =========================
