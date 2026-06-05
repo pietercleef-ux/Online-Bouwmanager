@@ -1,264 +1,171 @@
-// ========== DATA MANAGEMENT ==========
+// =========================
+// app.js
+// Online Bouwmanager 2026
+// =========================
+
 let costs = [];
-let projectData = {
-    name: 'Mijn Project',
-    budget: null
+let project = {
+    name: "",
+    budget: 0,
+    region: 1.0
 };
 
-// Load data from localStorage on page load
-function loadData() {
-    const savedCosts = localStorage.getItem('costs');
-    const savedProject = localStorage.getItem('projectData');
-    
-    if (savedCosts) {
-        costs = JSON.parse(savedCosts);
+// =========================
+// PRIJZEN 2026
+// =========================
+
+const PRICES = {
+    "Sloopwerk": {
+        "Binnenwand slopen": { unit: "m²", price: 45 },
+        "Vloer verwijderen": { unit: "m²", price: 22 }
+    },
+    "Metselwerk": {
+        "Kalkzandsteen": { unit: "m²", price: 95 },
+        "Baksteen": { unit: "m²", price: 165 }
+    },
+    "Installatie": {
+        "Stopcontact": { unit: "st", price: 95 },
+        "Lichtpunt": { unit: "st", price: 85 }
     }
-    if (savedProject) {
-        projectData = JSON.parse(savedProject);
-        document.getElementById('projectName').value = projectData.name;
-        if (projectData.budget) {
-            document.getElementById('projectBudget').value = projectData.budget;
-        }
-    }
-    
-    updateDisplay();
+};
+
+// AK / W&R / BTW
+const SETTINGS = {
+    ak: 0.08,
+    wr: 0.05,
+    btw: 0.21
+};
+
+// =========================
+// INIT
+// =========================
+
+window.onload = () => {
+    loadDropdowns();
+    load();
+};
+
+// =========================
+// DROPDOWNS
+// =========================
+
+function loadDropdowns() {
+    const cat = document.getElementById("category");
+    cat.innerHTML = Object.keys(PRICES)
+        .map(c => `<option>${c}</option>`)
+        .join("");
+
+    updateDescriptions();
+    cat.onchange = updateDescriptions;
 }
 
-// ========== PROJECT MANAGEMENT ==========
+function updateDescriptions() {
+    const cat = document.getElementById("category").value;
+    const desc = document.getElementById("description");
+
+    desc.innerHTML = Object.keys(PRICES[cat])
+        .map(d => `<option>${d}</option>`)
+        .join("");
+}
+
+// =========================
+// PROJECT OPSLAAN
+// =========================
+
 function saveProject() {
-    projectData.name = document.getElementById('projectName').value || 'Mijn Project';
-    projectData.budget = parseFloat(document.getElementById('projectBudget').value) || null;
-    
-    localStorage.setItem('projectData', JSON.stringify(projectData));
-    
-    alert(`Project "${projectData.name}" opgeslagen!`);
-    updateDisplay();
+    project.name = document.getElementById("projectName").value;
+    project.budget = +document.getElementById("projectBudget").value;
+    project.region = +document.getElementById("regionFactor").value;
+
+    localStorage.setItem("project", JSON.stringify(project));
 }
 
-// ========== COST MANAGEMENT ==========
+// =========================
+// KOST TOEVOEGEN
+// =========================
+
 function addCost() {
-    const category = document.getElementById('costCategory').value;
-    const description = document.getElementById('costDescription').value;
-    const amount = parseFloat(document.getElementById('costAmount').value);
-    const quantity = parseInt(document.getElementById('costQuantity').value) || 1;
-    
-    // Validation
-    if (!category || !description || !amount || amount <= 0) {
-        alert('Vul alstublieft alle velden correct in!');
-        return;
-    }
-    
-    // Add cost item
-    const costItem = {
-        id: Date.now(),
-        category,
-        description,
-        amount,
-        quantity,
-        total: amount * quantity
-    };
-    
-    costs.push(costItem);
-    
-    // Save to localStorage
-    localStorage.setItem('costs', JSON.stringify(costs));
-    
-    // Clear form
-    document.getElementById('costCategory').value = '';
-    document.getElementById('costDescription').value = '';
-    document.getElementById('costAmount').value = '';
-    document.getElementById('costQuantity').value = '1';
-    
-    updateDisplay();
-    document.getElementById('costDescription').focus();
-}
 
-function deleteCost(id) {
-    if (confirm('Weet u zeker dat u deze kostpost wilt verwijderen?')) {
-        costs = costs.filter(cost => cost.id !== id);
-        localStorage.setItem('costs', JSON.stringify(costs));
-        updateDisplay();
-    }
-}
+    const cat = document.getElementById("category").value;
+    const desc = document.getElementById("description").value;
+    const qty = +document.getElementById("quantity").value;
 
-// ========== FILTERING & SEARCHING ==========
-function filterCosts() {
-    const searchTerm = document.getElementById('searchCost').value.toLowerCase();
-    const categoryFilter = document.getElementById('filterCategory').value;
-    
-    const filteredCosts = costs.filter(cost => {
-        const matchesSearch = cost.description.toLowerCase().includes(searchTerm);
-        const matchesCategory = !categoryFilter || cost.category === categoryFilter;
-        return matchesSearch && matchesCategory;
+    const item = PRICES[cat][desc];
+
+    const unitPrice = item.price * project.region;
+
+    const total = unitPrice * qty;
+
+    costs.push({
+        cat,
+        desc,
+        unit: item.unit,
+        qty,
+        unitPrice,
+        total
     });
-    
-    displayCostsTable(filteredCosts);
+
+    render();
 }
 
-// ========== DISPLAY & CALCULATIONS ==========
-function updateDisplay() {
-    displayCostsTable(costs);
-    updateSummary();
-    checkBudget();
-}
+// =========================
+// RENDER
+// =========================
 
-function displayCostsTable(costsToDisplay) {
-    const tableBody = document.getElementById('costTableBody');
-    
-    if (costsToDisplay.length === 0) {
-        tableBody.innerHTML = '<tr class="empty-state"><td colspan="6">Nog geen kostposten ingevoerd</td></tr>';
-        return;
-    }
-    
-    tableBody.innerHTML = costsToDisplay.map(cost => `
+function render() {
+    const body = document.getElementById("rows");
+
+    body.innerHTML = costs.map((c, i) => `
         <tr>
-            <td><strong>${cost.category}</strong></td>
-            <td>${cost.description}</td>
-            <td>€ ${formatNumber(cost.amount)}</td>
-            <td>${cost.quantity}</td>
-            <td class="cost-amount">€ ${formatNumber(cost.total)}</td>
-            <td>
-                <button class="btn btn-delete" onclick="deleteCost(${cost.id})">Verwijder</button>
-            </td>
+            <td>${c.cat}</td>
+            <td>${c.desc}</td>
+            <td>${c.unit}</td>
+            <td>${c.qty}</td>
+            <td>€${c.unitPrice.toFixed(2)}</td>
+            <td>€${c.total.toFixed(2)}</td>
+            <td><button onclick="remove(${i})">X</button></td>
         </tr>
-    `).join('');
+    `).join("");
+
+    updateTotals();
 }
 
-function updateSummary() {
-    // Calculate totals
-    const totalCost = costs.reduce((sum, cost) => sum + cost.total, 0);
-    const itemCount = costs.length;
-    
-    // Update summary cards
-    document.getElementById('totalCost').textContent = `€ ${formatNumber(totalCost)}`;
-    document.getElementById('itemCount').textContent = itemCount;
-    
-    // Update budget info if set
-    if (projectData.budget) {
-        const remainingBudget = projectData.budget - totalCost;
-        document.getElementById('remainingBudgetCard').style.display = 'block';
-        document.getElementById('remainingBudget').textContent = `€ ${formatNumber(remainingBudget)}`;
-        document.getElementById('remainingBudget').style.color = 
-            remainingBudget >= 0 ? '#16a34a' : '#dc2626';
-    } else {
-        document.getElementById('remainingBudgetCard').style.display = 'none';
-    }
-    
-    // Update category breakdown
-    updateCategoryBreakdown();
+// =========================
+// TOTALEN
+// =========================
+
+function updateTotals() {
+
+    const direct = costs.reduce((a,b)=>a+b.total,0);
+
+    const ak = direct * SETTINGS.ak;
+    const wr = direct * SETTINGS.wr;
+    const subtotal = direct + ak + wr;
+    const btw = subtotal * SETTINGS.btw;
+    const total = subtotal + btw;
+
+    document.getElementById("directCost").innerText = "€" + direct.toFixed(2);
+    document.getElementById("ak").innerText = "€" + ak.toFixed(2);
+    document.getElementById("wr").innerText = "€" + wr.toFixed(2);
+    document.getElementById("btw").innerText = "€" + btw.toFixed(2);
+    document.getElementById("total").innerText = "€" + total.toFixed(2);
 }
 
-function updateCategoryBreakdown() {
-    const breakdown = {};
-    
-    costs.forEach(cost => {
-        if (!breakdown[cost.category]) {
-            breakdown[cost.category] = 0;
-        }
-        breakdown[cost.category] += cost.total;
-    });
-    
-    const breakdownContainer = document.getElementById('categoryBreakdown');
-    
-    if (Object.keys(breakdown).length === 0) {
-        breakdownContainer.innerHTML = '<p>Nog geen categorieën beschikbaar</p>';
-        return;
-    }
-    
-    breakdownContainer.innerHTML = Object.entries(breakdown)
-        .sort((a, b) => b[1] - a[1])
-        .map(([category, total]) => `
-            <div class="breakdown-item">
-                <div class="breakdown-item-name">${category}</div>
-                <div class="breakdown-item-value">€ ${formatNumber(total)}</div>
-            </div>
-        `).join('');
+// =========================
+// VERWIJDEREN
+// =========================
+
+function remove(i) {
+    costs.splice(i, 1);
+    render();
 }
 
-function checkBudget() {
-    const budgetSection = document.getElementById('budgetAlertSection');
-    
-    if (!projectData.budget) {
-        budgetSection.style.display = 'none';
-        return;
-    }
-    
-    const totalCost = costs.reduce((sum, cost) => sum + cost.total, 0);
-    const percentage = (totalCost / projectData.budget) * 100;
-    
-    if (percentage > 100) {
-        budgetSection.style.display = 'block';
-        const overBudget = totalCost - projectData.budget;
-        document.getElementById('budgetMessage').textContent = 
-            `U bent € ${formatNumber(overBudget)} over het budget heen! (${percentage.toFixed(1)}% van het budget)`;
-    } else if (percentage > 80) {
-        budgetSection.style.display = 'block';
-        const remaining = projectData.budget - totalCost;
-        document.getElementById('budgetMessage').textContent = 
-            `U heeft nog € ${formatNumber(remaining)} over. (${percentage.toFixed(1)}% gebruikt)`;
-    } else {
-        budgetSection.style.display = 'none';
-    }
-}
+// =========================
+// LOAD
+// =========================
 
-// ========== EXPORT & PRINT ==========
-function exportToCSV() {
-    if (costs.length === 0) {
-        alert('Geen kostposten om te exporteren!');
-        return;
-    }
-    
-    let csv = 'Bouwkosten Rapportage\n';
-    csv += `Project: ${projectData.name}\n`;
-    csv += `Datum: ${new Date().toLocaleDateString('nl-NL')}\n\n`;
-    csv += 'Categorie,Omschrijving,Eenheidsprijs,Aantal,Totaal\n';
-    
-    costs.forEach(cost => {
-        csv += `${cost.category},"${cost.description}",${cost.amount},${cost.quantity},${cost.total}\n`;
-    });
-    
-    const totalCost = costs.reduce((sum, cost) => sum + cost.total, 0);
-    csv += `\n,,,TOTAAL,${totalCost}`;
-    
-    // Create download link
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
-    element.setAttribute('download', `bouwkosten_${projectData.name.replace(/\s/g, '_')}.csv`);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-    
-    alert('Rapportage succesvol gedownload!');
+function load() {
+    const p = localStorage.getItem("project");
+    if (p) project = JSON.parse(p);
 }
-
-function printReport() {
-    if (costs.length === 0) {
-        alert('Geen kostposten om af te drukken!');
-        return;
-    }
-    
-    window.print();
-}
-
-function clearAll() {
-    if (confirm('⚠️ WAARSCHUWING: Dit zal ALLE gegevens wissen! Bent u hier zeker van?')) {
-        if (confirm('Dit kan niet ongedaan gemaakt worden. Doorgaan?')) {
-            costs = [];
-            projectData = { name: 'Mijn Project', budget: null };
-            localStorage.clear();
-            document.getElementById('projectName').value = '';
-            document.getElementById('projectBudget').value = '';
-            updateDisplay();
-            alert('Alle gegevens zijn verwijderd!');
-        }
-    }
-}
-
-// ========== UTILITY FUNCTIONS ==========
-function formatNumber(num) {
-    return num.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
-
-// ========== INITIALIZATION ==========
-document.addEventListener('DOMContentLoaded', loadData);
+```
