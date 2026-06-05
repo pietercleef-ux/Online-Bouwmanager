@@ -7,25 +7,28 @@ Online Bouwmanager 2026
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Online Bouwmanager 2026</title>
+    <title>Bouwkosten Calculator - Cleef Bouwmanagement</title>
     <link rel="stylesheet" href="styles.css"/>
 </head>
 
 <body>
 
 <header class="header">
-    <h1>Online Bouwmanager 2026</h1>
-    <p>Professionele bouwkosten calculator</p>
+    <div class="header-content">
+        <h1>🏗️ Bouwkosten Calculator</h1>
+        <p>Professionele kostenberekening voor uw bouwproject</p>
+    </div>
 </header>
 
 <section class="grid">
 
     <div class="card">
-        <h2>Project</h2>
-        <input id="projectName" placeholder="Projectnaam"/>
-        <input id="projectBudget" type="number" placeholder="Budget (€)"/>
+        <h2>📋 Project Informatie</h2>
+        <input id="projectName" placeholder="Projectnaam" class="input-field"/>
+        <input id="projectBudget" type="number" placeholder="Budget (€)" class="input-field"/>
 
-        <select id="regionFactor">
+        <label class="form-label">Regio:</label>
+        <select id="regionFactor" class="select-field">
             <option value="0.95">Noord</option>
             <option value="0.97">Oost</option>
             <option value="1.00" selected>Zuid</option>
@@ -33,112 +36,167 @@ Online Bouwmanager 2026
             <option value="1.15">Randstad</option>
         </select>
 
-        <button onclick="saveProject()">Opslaan</button>
+        <button onclick="saveProject()" class="btn-primary">💾 Opslaan</button>
     </div>
 
     <div class="card">
-        <h2>Kost toevoegen</h2>
+        <h2>�� Kost Toevoegen</h2>
 
-        <select id="category"></select>
-        <select id="description"></select>
+        <label class="form-label">Categorie:</label>
+        <select id="category" class="select-field"></select>
+        
+        <label class="form-label">Omschrijving:</label>
+        <select id="description" class="select-field"></select>
 
-        <input id="quantity" type="number" placeholder="Aantal"/>
+        <label class="form-label">Aantal:</label>
+        <input id="quantity" type="number" placeholder="Aantal" class="input-field"/>
 
-        <button onclick="addCost()">Toevoegen</button>
+        <button onclick="addCost()" class="btn-secondary">➕ Toevoegen</button>
     </div>
 
     <div class="card summary">
-        <h2>Overzicht</h2>
-        <p>Direct: <span id="directCost">€0</span></p>
-        <p>AK: <span id="ak">€0</span></p>
-        <p>W&R: <span id="wr">€0</span></p>
-        <p>BTW: <span id="btw">€0</span></p>
-        <h3>Totaal: <span id="total">€0</span></h3>
+        <h2>💰 Kostenoverzicht</h2>
+        <div class="summary-row">
+            <span>Direct:</span>
+            <span id="directCost">€0,00</span>
+        </div>
+        <div class="summary-row">
+            <span>AK (8%):</span>
+            <span id="ak">€0,00</span>
+        </div>
+        <div class="summary-row">
+            <span>W&R (5%):</span>
+            <span id="wr">€0,00</span>
+        </div>
+        <div class="summary-row">
+            <span>BTW (21%):</span>
+            <span id="btw">€0,00</span>
+        </div>
+        <div class="summary-total">
+            <span>Totaal:</span>
+            <span id="total">€0,00</span>
+        </div>
     </div>
 
 </section>
 
 <!-- QUICK SELECTOR SECTION -->
 <section class="quick-selector-section">
-    <div style="font-family:Arial; max-width:900px; margin:auto; background: white; padding: 20px; border-radius: 8px;">
-        <h2>🏗️ Snelle Calculator - Vul uw project in</h2>
+    <div class="container">
+        <h2>⚡ Snelle Kostenschatter</h2>
+        <p class="subtitle">Vul uw projectgegevens in en krijg direct een indicatie van de kosten</p>
 
-        <!-- TYPE -->
-        <div class="form-group">
-            <label>Type werk:</label><br>
-            <select id="type" onchange="quickCalc()">
-                <option value="verbouwing">Verbouwing</option>
-                <option value="aanbouw">Aanbouw</option>
-            </select>
-        </div>
+        <div class="quick-form">
+            <!-- TYPE & BASICS -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Type werk:</label>
+                    <select id="type" onchange="quickCalc()" class="select-field">
+                        <option value="verbouwing">Verbouwing</option>
+                        <option value="aanbouw">Aanbouw</option>
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label>Oppervlakte (m²):</label><br>
-            <input type="number" id="m2" value="40" min="10" max="200" oninput="quickCalc()">
-        </div>
+                <div class="form-group">
+                    <label>Oppervlakte (m²):</label>
+                    <input type="number" id="m2" value="40" min="10" max="200" oninput="quickCalc()" class="input-field">
+                </div>
 
-        <div class="form-group">
-            <label>Kwaliteit:</label><br>
-            <select id="kwaliteit" onchange="quickCalc()">
-                <option value="basis">Basis</option>
-                <option value="midden">Midden</option>
-                <option value="luxe">Luxe</option>
-            </select>
-        </div>
+                <div class="form-group">
+                    <label>Kwaliteit:</label>
+                    <select id="kwaliteit" onchange="quickCalc()" class="select-field">
+                        <option value="basis">Basis</option>
+                        <option value="midden">Midden</option>
+                        <option value="luxe">Luxe</option>
+                    </select>
+                </div>
+            </div>
 
-        <hr>
+            <hr class="divider">
 
-        <!-- INSTALLATIES -->
-        <h3>Keuken, badkamer & installaties</h3>
-        <div class="checkbox-group">
-            <label><input type="checkbox" id="keuken" onchange="quickCalc()"> Keuken</label>
-            <label><input type="checkbox" id="badkamer" onchange="quickCalc()"> Badkamer</label>
-            <label><input type="checkbox" id="elektra" onchange="quickCalc()"> Elektra</label>
-            <label><input type="checkbox" id="verwarming" onchange="quickCalc()"> Verwarming / warmtepomp</label>
-        </div>
+            <!-- INSTALLATIES -->
+            <h3>Keuken, Badkamer & Installaties</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="keuken" onchange="quickCalc()"> Keuken
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="badkamer" onchange="quickCalc()"> Badkamer
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="elektra" onchange="quickCalc()"> Elektra
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="verwarming" onchange="quickCalc()"> Verwarming / Warmtepomp
+                </label>
+            </div>
 
-        <!-- BOUWKUNDIG -->
-        <h3>Bouwkundige werkzaamheden</h3>
-        <div class="checkbox-group">
-            <label><input type="checkbox" id="sloopwerk" onchange="quickCalc()"> Sloopwerk</label>
-            <label><input type="checkbox" id="dakkapel" onchange="quickCalc()"> Dakkapel / dakopbouw</label>
-            <label><input type="checkbox" id="kozijnen" onchange="quickCalc()"> Kozijnen</label>
-            <label><input type="checkbox" id="vloeren" onchange="quickCalc()"> Vloeren</label>
-        </div>
+            <!-- BOUWKUNDIG -->
+            <h3>Bouwkundige Werkzaamheden</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sloopwerk" onchange="quickCalc()"> Sloopwerk
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="dakkapel" onchange="quickCalc()"> Dakkapel / Dakopbouw
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="kozijnen" onchange="quickCalc()"> Kozijnen
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="vloeren" onchange="quickCalc()"> Vloeren
+                </label>
+            </div>
 
-        <!-- DUURZAAM -->
-        <h3>Duurzaamheid & vergunning</h3>
-        <div class="checkbox-group">
-            <label><input type="checkbox" id="isolatie" onchange="quickCalc()"> Isolatie</label>
-            <label><input type="checkbox" id="zonnepanelen" onchange="quickCalc()"> Zonnepanelen</label>
-        </div>
+            <!-- DUURZAAM -->
+            <h3>Duurzaamheid & Vergunningen</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="isolatie" onchange="quickCalc()"> Isolatie
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="zonnepanelen" onchange="quickCalc()"> Zonnepanelen
+                </label>
+            </div>
 
-        <hr>
+            <hr class="divider">
 
-        <!-- QUICK RESULT -->
-        <div class="quick-result">
-            <h3>Geschatte kosten: <span id="quickEstimate">€0</span></h3>
-            <button onclick="applyQuickSelection()" class="btn-apply">➕ Toevoegen aan calculator</button>
+            <!-- QUICK RESULT -->
+            <div class="quick-result">
+                <p class="result-label">Geschatte kosten:</p>
+                <h3 class="result-amount" id="quickEstimate">€0,00</h3>
+                <button onclick="applyQuickSelection()" class="btn-apply">➕ Toevoegen aan calculator</button>
+            </div>
         </div>
     </div>
 </section>
 
-<section class="table">
-    <table>
-        <thead>
-        <tr>
-            <th>Categorie</th>
-            <th>Omschrijving</th>
-            <th>Eenheid</th>
-            <th>Aantal</th>
-            <th>Prijs</th>
-            <th>Totaal</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-    </table>
+<!-- DETAILED TABLE -->
+<section class="table-section">
+    <div class="container">
+        <h2>📊 Gedetailleerde Kostenlijst</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Categorie</th>
+                    <th>Omschrijving</th>
+                    <th>Eenheid</th>
+                    <th>Aantal</th>
+                    <th>Prijs per eenheid</th>
+                    <th>Totaal</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
+    </div>
 </section>
+
+<footer class="footer">
+    <p>&copy; 2026 Cleef Bouwmanagement - Bouwkosten Calculator | Gebouwd met professionele zorg</p>
+</footer>
 
 <script src="script.js"></script>
 </body>
