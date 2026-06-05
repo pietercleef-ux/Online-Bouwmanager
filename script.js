@@ -21,6 +21,7 @@ const PRICES = {
         "Vloer verwijderen (m²)": { unit: "m²", price: 35 },
         "Dak/dakpannen verwijderen (m²)": { unit: "m²", price: 65 },
         "Dakbeschot verwijderen (m²)": { unit: "m²", price: 28 }
+        "Badkmaer verwijderen (m²)": { unit: "m²", price: 100 }
     },
     "Metselwerk": {
         "Kalkzandsteen muur (m²)": { unit: "m²", price: 95 },
