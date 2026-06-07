@@ -11,160 +11,161 @@ let project = {
 };
 
 // =========================
-// PRIJZEN 2026 - NEDERLAND
+// PRIJZEN 2026 - NEDERLAND (BIJGEWERKT)
+// Gebaseerd op huidige marktprijzen en CBS/IGG indexen
 // =========================
 
 const PRICES = {
     "Sloopwerk": {
-        "Binnenwand slopen (m²)": { unit: "m²", price: 45 },
-        "Buitenwand slopen (m²)": { unit: "m²", price: 85 },
-        "Vloer verwijderen (m²)": { unit: "m²", price: 35 },
-        "Dak/dakpannen verwijderen (m²)": { unit: "m²", price: 65 },
-        "Dakbeschot verwijderen (m²)": { unit: "m²", price: 28 },
-        "Badkamer verwijderen (m²)": { unit: "m²", price: 100 }
+        "Binnenwand slopen (m²)": { unit: "m²", price: 52 },
+        "Buitenwand slopen (m²)": { unit: "m²", price: 95 },
+        "Vloer verwijderen (m²)": { unit: "m²", price: 42 },
+        "Dak/dakpannen verwijderen (m²)": { unit: "m²", price: 75 },
+        "Dakbeschot verwijderen (m²)": { unit: "m²", price: 35 },
+        "Badkamer verwijderen (m²)": { unit: "m²", price: 115 }
     },
     "Metselwerk": {
-        "Kalkzandsteen muur (m²)": { unit: "m²", price: 95 },
-        "Baksteen muur (m²)": { unit: "m²", price: 165 },
-        "Isolatiebaksteen (m²)": { unit: "m²", price: 145 },
-        "Cellenbeton blokken (m²)": { unit: "m²", price: 72 },
-        "Voegen herstellen (m²)": { unit: "m²", price: 38 }
+        "Kalkzandsteen muur (m²)": { unit: "m²", price: 125 },
+        "Baksteen muur (m²)": { unit: "m²", price: 185 },
+        "Isolatiebaksteen (m²)": { unit: "m²", price: 165 },
+        "Cellenbeton blokken (m²)": { unit: "m²", price: 95 },
+        "Voegen herstellen (m²)": { unit: "m²", price: 45 }
     },
     "Timmerwerk": {
-        "Houten vloer (m²)": { unit: "m²", price: 125 },
-        "Ondervloering (m²)": { unit: "m²", price: 45 },
-        "Dakconstructie (m²)": { unit: "m²", price: 185 },
-        "Deurkozijn plaatsen (stuks)": { unit: "st", price: 95 },
-        "Raamkozijn plaatsen (stuks)": { unit: "st", price: 185 }
+        "Houten vloer (m²)": { unit: "m²", price: 145 },
+        "Ondervloering (m²)": { unit: "m²", price: 55 },
+        "Dakconstructie (m²)": { unit: "m²", price: 210 },
+        "Deurkozijn plaatsen (stuks)": { unit: "st", price: 115 },
+        "Raamkozijn plaatsen (stuks)": { unit: "st", price: 215 }
     },
     "Elektriciteit": {
-        "Stopcontact plaatsen (stuks)": { unit: "st", price: 95 },
-        "Lichtpunt plaatsen (stuks)": { unit: "st", price: 85 },
-        "Schakelaar plaatsen (stuks)": { unit: "st", price: 75 },
-        "Groepenkast vervangen (stuks)": { unit: "st", price: 425 },
-        "Elektriciteit aansluiting (m)": { unit: "m", price: 35 }
+        "Stopcontact plaatsen (stuks)": { unit: "st", price: 110 },
+        "Lichtpunt plaatsen (stuks)": { unit: "st", price: 95 },
+        "Schakelaar plaatsen (stuks)": { unit: "st", price: 85 },
+        "Groepenkast vervangen (stuks)": { unit: "st", price: 495 },
+        "Elektriciteit aansluiting (m)": { unit: "m", price: 42 }
     },
     "Sanitair": {
-        "Toilet plaatsen (stuks)": { unit: "st", price: 185 },
-        "Wastafel plaatsen (stuks)": { unit: "st", price: 145 },
-        "Douche installeren (stuks)": { unit: "st", price: 325 },
-        "Badkamer tegels (m²)": { unit: "m²", price: 85 },
-        "Loodgieter werkzaamheden (uur)": { unit: "uur", price: 65 }
+        "Toilet plaatsen (stuks)": { unit: "st", price: 215 },
+        "Wastafel plaatsen (stuks)": { unit: "st", price: 165 },
+        "Douche installeren (stuks)": { unit: "st", price: 375 },
+        "Badkamer tegels (m²)": { unit: "m²", price: 95 },
+        "Loodgieter werkzaamheden (uur)": { unit: "uur", price: 75 }
     },
     "Afwerking": {
-        "Pleisterwerk (m²)": { unit: "m²", price: 32 },
-        "Muurverf (m²)": { unit: "m²", price: 18 },
-        "Vloertegel (m²)": { unit: "m²", price: 72 },
-        "Vinyl vloer (m²)": { unit: "m²", price: 52 },
-        "Behang (m²)": { unit: "m²", price: 28 },
-        "Deurkruk montage (stuks)": { unit: "st", price: 25 }
+        "Pleisterwerk (m²)": { unit: "m²", price: 38 },
+        "Muurverf (m²)": { unit: "m²", price: 22 },
+        "Vloertegel (m²)": { unit: "m²", price: 82 },
+        "Vinyl vloer (m²)": { unit: "m²", price: 62 },
+        "Behang (m²)": { unit: "m²", price: 32 },
+        "Deurkruk montage (stuks)": { unit: "st", price: 30 }
     },
     "Isolatie & Thermisch": {
-        "Muurisolatie (m²)": { unit: "m²", price: 48 },
-        "Dakisolatie (m²)": { unit: "m²", price: 42 },
-        "Vloerisolatie (m²)": { unit: "m²", price: 35 },
-        "Double glazing raam (m²)": { unit: "m²", price: 275 },
-        "Deur isoleren (stuks)": { unit: "st", price: 165 }
+        "Muurisolatie (m²)": { unit: "m²", price: 58 },
+        "Dakisolatie (m²)": { unit: "m²", price: 52 },
+        "Vloerisolatie (m²)": { unit: "m²", price: 45 },
+        "Double glazing raam (m²)": { unit: "m²", price: 315 },
+        "Deur isoleren (stuks)": { unit: "st", price: 195 }
     },
     "Dakbedekking": {
-        "Dakpan leggen (m²)": { unit: "m²", price: 55 },
-        "Bitumen dakbedekking (m²)": { unit: "m²", price: 42 },
-        "Zinkwerk/goten (m)": { unit: "m", price: 28 },
-        "Dakramen plaatsen (stuks)": { unit: "st", price: 245 }
+        "Dakpan leggen (m²)": { unit: "m²", price: 65 },
+        "Bitumen dakbedekking (m²)": { unit: "m²", price: 52 },
+        "Zinkwerk/goten (m)": { unit: "m", price: 35 },
+        "Dakramen plaatsen (stuks)": { unit: "st", price: 285 }
     },
     "Schilderwerk": {
-        "Muur schilderen (m²)": { unit: "m²", price: 18 },
-        "Plafond schilderen (m²)": { unit: "m²", price: 22 },
-        "Deur/Raam schilderen (stuks)": { unit: "st", price: 35 },
-        "Grondlaag aanbrengen (m²)": { unit: "m²", price: 12 }
+        "Muur schilderen (m²)": { unit: "m²", price: 22 },
+        "Plafond schilderen (m²)": { unit: "m²", price: 26 },
+        "Deur/Raam schilderen (stuks)": { unit: "st", price: 42 },
+        "Grondlaag aanbrengen (m²)": { unit: "m²", price: 15 }
     },
     "Bouwhuisvesting": {
-        "Locatietoilet huur/maand": { unit: "maand", price: 145 },
-        "Bouwkeet huur/week": { unit: "week", price: 125 },
-        "Afzetting/hekwerk (m)": { unit: "m", price: 15 },
-        "Steiger huur/week (m²)": { unit: "week", price: 8 }
+        "Locatietoilet huur/maand": { unit: "maand", price: 165 },
+        "Bouwkeet huur/week": { unit: "week", price: 145 },
+        "Afzetting/hekwerk (m)": { unit: "m", price: 18 },
+        "Steiger huur/week (m²)": { unit: "week", price: 9 }
     }
 };
 
 // =========================
-// SNELLE CALCULATOR PRIJZEN
+// SNELLE CALCULATOR PRIJZEN (2026)
 // =========================
 
 const QUICK_PRICES = {
     "verbouwing": {
         "basis": {
-            keuken: 8000,
-            badkamer: 6000,
-            elektra: 3500,
-            verwarming: 4000,
-            sloopwerk: 2000,
-            dakkapel: 15000,
-            kozijnen: 5000,
-            vloeren: 4000,
-            isolatie: 3000,
-            zonnepanelen: 12000
+            keuken: 9500,
+            badkamer: 7000,
+            elektra: 4200,
+            verwarming: 4800,
+            sloopwerk: 2500,
+            dakkapel: 18000,
+            kozijnen: 6000,
+            vloeren: 4800,
+            isolatie: 3600,
+            zonnepanelen: 14000
         },
         "midden": {
-            keuken: 12000,
-            badkamer: 9000,
-            elektra: 4500,
-            verwarming: 5500,
-            sloopwerk: 3000,
-            dakkapel: 20000,
-            kozijnen: 7000,
-            vloeren: 6000,
-            isolatie: 4500,
-            zonnepanelen: 15000
+            keuken: 14000,
+            badkamer: 10500,
+            elektra: 5400,
+            verwarming: 6500,
+            sloopwerk: 3500,
+            dakkapel: 23000,
+            kozijnen: 8500,
+            vloeren: 7200,
+            isolatie: 5400,
+            zonnepanelen: 17500
         },
         "luxe": {
-            keuken: 18000,
-            badkamer: 13000,
-            elektra: 6000,
-            verwarming: 7500,
-            sloopwerk: 4000,
-            dakkapel: 25000,
-            kozijnen: 10000,
-            vloeren: 9000,
-            isolatie: 6500,
-            zonnepanelen: 18000
+            keuken: 21000,
+            badkamer: 15000,
+            elektra: 7200,
+            verwarming: 9000,
+            sloopwerk: 4800,
+            dakkapel: 29000,
+            kozijnen: 12000,
+            vloeren: 10800,
+            isolatie: 7800,
+            zonnepanelen: 21000
         }
     },
     "aanbouw": {
         "basis": {
-            keuken: 5000,
-            badkamer: 4000,
-            elektra: 2500,
-            verwarming: 3000,
+            keuken: 6000,
+            badkamer: 4800,
+            elektra: 3000,
+            verwarming: 3600,
             sloopwerk: 0,
             dakkapel: 0,
-            kozijnen: 3500,
-            vloeren: 3000,
-            isolatie: 2500,
-            zonnepanelen: 10000
-        },
-        "midden": {
-            keuken: 8000,
-            badkamer: 6000,
-            elektra: 3500,
-            verwarming: 4000,
-            sloopwerk: 0,
-            dakkapel: 0,
-            kozijnen: 5000,
-            vloeren: 4500,
-            isolatie: 3500,
+            kozijnen: 4200,
+            vloeren: 3600,
+            isolatie: 3000,
             zonnepanelen: 12000
         },
-        "luxe": {
-            keuken: 12000,
-            badkamer: 9000,
-            elektra: 5000,
-            verwarming: 6000,
+        "midden": {
+            keuken: 9500,
+            badkamer: 7000,
+            elektra: 4200,
+            verwarming: 4800,
             sloopwerk: 0,
             dakkapel: 0,
-            kozijnen: 7500,
-            vloeren: 6500,
-            isolatie: 5500,
-            zonnepanelen: 15000
+            kozijnen: 6000,
+            vloeren: 5400,
+            isolatie: 4200,
+            zonnepanelen: 14000
+        },
+        "luxe": {
+            keuken: 14000,
+            badkamer: 10500,
+            elektra: 6000,
+            verwarming: 7200,
+            sloopwerk: 0,
+            dakkapel: 0,
+            kozijnen: 9000,
+            vloeren: 7800,
+            isolatie: 6600,
+            zonnepanelen: 17500
         }
     }
 };
