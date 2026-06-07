@@ -210,6 +210,24 @@ function updateDescriptions() {
 }
 
 // =========================
+// TOGGLE INPUT TYPE
+// =========================
+
+function toggleInputType() {
+    const inputType = document.querySelector('input[name="inputType"]:checked').value;
+    const predefinedInput = document.getElementById("predefinedInput");
+    const customInput = document.getElementById("customInput");
+
+    if (inputType === "predefined") {
+        predefinedInput.style.display = "block";
+        customInput.style.display = "none";
+    } else {
+        predefinedInput.style.display = "none";
+        customInput.style.display = "block";
+    }
+}
+
+// =========================
 // PROJECT OPSLAAN
 // =========================
 
@@ -222,7 +240,7 @@ function saveProject() {
 }
 
 // =========================
-// KOST TOEVOEGEN
+// KOST TOEVOEGEN (VOORAF INGESTELD)
 // =========================
 
 function addCost() {
@@ -247,6 +265,43 @@ function addCost() {
     });
 
     render();
+    document.getElementById("quantity").value = "";
+}
+
+// =========================
+// KOST TOEVOEGEN (AANGEPAST)
+// =========================
+
+function addCustomCost() {
+    const cat = document.getElementById("customCategory").value.trim();
+    const desc = document.getElementById("customDescription").value.trim();
+    const unit = document.getElementById("customUnit").value;
+    const qty = +document.getElementById("customQuantity").value;
+    const unitPrice = +document.getElementById("customUnitPrice").value;
+
+    if (!cat || !desc || qty <= 0 || unitPrice < 0) {
+        alert("⚠️ Vul alle velden correct in (positieve waarden)");
+        return;
+    }
+
+    const total = unitPrice * qty;
+
+    costs.push({
+        cat,
+        desc,
+        unit,
+        qty,
+        unitPrice,
+        total
+    });
+
+    render();
+    
+    // Reset form
+    document.getElementById("customCategory").value = "";
+    document.getElementById("customDescription").value = "";
+    document.getElementById("customQuantity").value = "";
+    document.getElementById("customUnitPrice").value = "";
 }
 
 // =========================
@@ -320,14 +375,39 @@ function render() {
             <td>${c.cat}</td>
             <td>${c.desc}</td>
             <td>${c.unit}</td>
-            <td>${c.qty}</td>
-            <td>€${c.unitPrice.toFixed(2)}</td>
+            <td class="editable" contenteditable="true" onblur="updateCost(${i}, 'qty', this.innerText)">${c.qty}</td>
+            <td class="editable" contenteditable="true" onblur="updateCost(${i}, 'unitPrice', this.innerText)">€${c.unitPrice.toFixed(2)}</td>
             <td>€${c.total.toFixed(2)}</td>
-            <td><button onclick="remove(${i})">X</button></td>
+            <td><button onclick="remove(${i})" class="btn-delete">X</button></td>
         </tr>
     `).join("");
 
     updateTotals();
+}
+
+// =========================
+// UPDATE COST (INLINE EDITING)
+// =========================
+
+function updateCost(index, field, value) {
+    const numValue = parseFloat(value.replace('€', '').replace(',', '.'));
+    
+    if (isNaN(numValue) || numValue < 0) {
+        alert("⚠️ Voer een geldig getal in");
+        render();
+        return;
+    }
+
+    if (field === 'qty') {
+        costs[index].qty = numValue;
+    } else if (field === 'unitPrice') {
+        costs[index].unitPrice = numValue;
+    }
+
+    // Herberekenen totaal
+    costs[index].total = costs[index].qty * costs[index].unitPrice;
+    
+    render();
 }
 
 // =========================
