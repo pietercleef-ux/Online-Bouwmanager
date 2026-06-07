@@ -2,7 +2,23 @@
 
 Een moderne web applicatie voor het berekenen en beheren van bouwkosten voor verbouwingsprojecten.
 
-## Features
+## 🚀 Snelle Kostenschatter
+
+Snel een bouwproject inschatten? Gebruik onze eenvoudige kostenschatter:
+
+1. Voer de projectnaam in
+2. Schat de totale kosten
+3. Bekijk direct het resultaat
+
+[Start Snelle Kostenschatter →](#)
+
+---
+
+## 📊 Uitgebreide Bouwkosten Calculator
+
+Voor meer controle en detail:
+
+### Features
 
 - 📊 **Bouwkosten Calculator**: Bereken totale kosten voor uw bouwproject
 - 📋 **Categorieën Management**: Voeg categorieën toe zoals materialen, arbeid, etc.
@@ -25,7 +41,7 @@ npm install
 npm start
 ```
 
-## Gebruik
+## Gebruik - Uitgebreide Versie
 
 1. Maak een nieuw project aan
 2. Voeg kostencategorieën in
