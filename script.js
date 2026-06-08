@@ -1,5 +1,5 @@
 // =========================
-// app.js
+// script.js - Updated
 // Online Bouwmanager 2026
 // =========================
 
@@ -10,9 +10,10 @@ let project = {
     region: 1.0
 };
 
+let currentProjectId = null;
+
 // =========================
 // PRIJZEN 2026 - NEDERLAND (BIJGEWERKT)
-// Gebaseerd op huidige marktprijzen en CBS/IGG indexen
 // =========================
 
 const PRICES = {
@@ -87,90 +88,19 @@ const PRICES = {
     }
 };
 
-// =========================
-// SNELLE CALCULATOR PRIJZEN (2026)
-// =========================
-
 const QUICK_PRICES = {
     "verbouwing": {
-        "basis": {
-            keuken: 9500,
-            badkamer: 7000,
-            elektra: 4200,
-            verwarming: 4800,
-            sloopwerk: 2500,
-            dakkapel: 18000,
-            kozijnen: 6000,
-            vloeren: 4800,
-            isolatie: 3600,
-            zonnepanelen: 14000
-        },
-        "midden": {
-            keuken: 14000,
-            badkamer: 10500,
-            elektra: 5400,
-            verwarming: 6500,
-            sloopwerk: 3500,
-            dakkapel: 23000,
-            kozijnen: 8500,
-            vloeren: 7200,
-            isolatie: 5400,
-            zonnepanelen: 17500
-        },
-        "luxe": {
-            keuken: 21000,
-            badkamer: 15000,
-            elektra: 7200,
-            verwarming: 9000,
-            sloopwerk: 4800,
-            dakkapel: 29000,
-            kozijnen: 12000,
-            vloeren: 10800,
-            isolatie: 7800,
-            zonnepanelen: 21000
-        }
+        "basis": { keuken: 9500, badkamer: 7000, elektra: 4200, verwarming: 4800, sloopwerk: 2500, dakkapel: 18000, kozijnen: 6000, vloeren: 4800, isolatie: 3600, zonnepanelen: 14000 },
+        "midden": { keuken: 14000, badkamer: 10500, elektra: 5400, verwarming: 6500, sloopwerk: 3500, dakkapel: 23000, kozijnen: 8500, vloeren: 7200, isolatie: 5400, zonnepanelen: 17500 },
+        "luxe": { keuken: 21000, badkamer: 15000, elektra: 7200, verwarming: 9000, sloopwerk: 4800, dakkapel: 29000, kozijnen: 12000, vloeren: 10800, isolatie: 7800, zonnepanelen: 21000 }
     },
     "aanbouw": {
-        "basis": {
-            keuken: 6000,
-            badkamer: 4800,
-            elektra: 3000,
-            verwarming: 3600,
-            sloopwerk: 0,
-            dakkapel: 0,
-            kozijnen: 4200,
-            vloeren: 3600,
-            isolatie: 3000,
-            zonnepanelen: 12000
-        },
-        "midden": {
-            keuken: 9500,
-            badkamer: 7000,
-            elektra: 4200,
-            verwarming: 4800,
-            sloopwerk: 0,
-            dakkapel: 0,
-            kozijnen: 6000,
-            vloeren: 5400,
-            isolatie: 4200,
-            zonnepanelen: 14000
-        },
-        "luxe": {
-            keuken: 14000,
-            badkamer: 10500,
-            elektra: 6000,
-            verwarming: 7200,
-            sloopwerk: 0,
-            dakkapel: 0,
-            kozijnen: 9000,
-            vloeren: 7800,
-            isolatie: 6600,
-            zonnepanelen: 17500
-        }
+        "basis": { keuken: 6000, badkamer: 4800, elektra: 3000, verwarming: 3600, sloopwerk: 0, dakkapel: 0, kozijnen: 4200, vloeren: 3600, isolatie: 3000, zonnepanelen: 12000 },
+        "midden": { keuken: 9500, badkamer: 7000, elektra: 4200, verwarming: 4800, sloopwerk: 0, dakkapel: 0, kozijnen: 6000, vloeren: 5400, isolatie: 4200, zonnepanelen: 14000 },
+        "luxe": { keuken: 14000, badkamer: 10500, elektra: 6000, verwarming: 7200, sloopwerk: 0, dakkapel: 0, kozijnen: 9000, vloeren: 7800, isolatie: 6600, zonnepanelen: 17500 }
     }
 };
 
-// AK / W&R / BTW
 const SETTINGS = {
     ak: 0.08,
     wr: 0.05,
@@ -182,9 +112,37 @@ const SETTINGS = {
 // =========================
 
 window.onload = () => {
+    checkAuth();
     loadDropdowns();
     load();
 };
+
+// =========================
+// AUTH CHECK
+// =========================
+
+function checkAuth() {
+    if (!auth.isAuthenticated()) {
+        window.location.href = 'login.html';
+    } else {
+        updateUserUI();
+    }
+}
+
+function updateUserUI() {
+    const userInfo = document.getElementById('userInfo');
+    if (userInfo && auth.user) {
+        userInfo.innerHTML = `
+            <span>${auth.user.name || auth.user.email}</span>
+            <button onclick="logout()" style="background: #e74c3c; padding: 8px 12px; border: none; color: white; border-radius: 4px; cursor: pointer;">Afmelden</button>
+        `;
+    }
+}
+
+function logout() {
+    auth.logout();
+    window.location.href = 'login.html';
+}
 
 // =========================
 // DROPDOWNS
@@ -231,10 +189,34 @@ function toggleInputType() {
 // PROJECT OPSLAAN
 // =========================
 
-function saveProject() {
+async function saveProject() {
     project.name = document.getElementById("projectName").value;
     project.budget = +document.getElementById("projectBudget").value;
     project.region = +document.getElementById("regionFactor").value;
+
+    try {
+        if (currentProjectId) {
+            await projectManager.updateProject(
+                currentProjectId,
+                project.name,
+                project.budget,
+                project.region,
+                costs
+            );
+            alert("✅ Project bijgewerkt!");
+        } else {
+            const result = await projectManager.createProject(
+                project.name,
+                project.budget,
+                project.region,
+                costs
+            );
+            currentProjectId = result.id;
+            alert("✅ Project opgeslagen!");
+        }
+    } catch (error) {
+        alert("❌ Fout bij opslaan: " + error.message);
+    }
 
     localStorage.setItem("project", JSON.stringify(project));
 }
@@ -244,15 +226,12 @@ function saveProject() {
 // =========================
 
 function addCost() {
-
     const cat = document.getElementById("category").value;
     const desc = document.getElementById("description").value;
     const qty = +document.getElementById("quantity").value;
 
     const item = PRICES[cat][desc];
-
     const unitPrice = item.price * project.region;
-
     const total = unitPrice * qty;
 
     costs.push({
@@ -297,7 +276,6 @@ function addCustomCost() {
 
     render();
     
-    // Reset form
     document.getElementById("customCategory").value = "";
     document.getElementById("customDescription").value = "";
     document.getElementById("customQuantity").value = "";
@@ -314,10 +292,8 @@ function quickCalc() {
     const kwaliteit = document.getElementById("kwaliteit").value;
 
     const basePrices = QUICK_PRICES[type][kwaliteit];
-
     let totalCost = 0;
 
-    // Controleer alle checkboxes en tel op
     const checkboxes = ["keuken", "badkamer", "elektra", "verwarming", "sloopwerk", "dakkapel", "kozijnen", "vloeren", "isolatie", "zonnepanelen"];
 
     checkboxes.forEach(checkbox => {
@@ -327,9 +303,7 @@ function quickCalc() {
         }
     });
 
-    // Vermenigvuldig met oppervlakte (per m²)
-    const estimate = totalCost * (m2 / 40); // 40m² is basis
-
+    const estimate = totalCost * (m2 / 40);
     document.getElementById("quickEstimate").innerText = "€" + estimate.toFixed(2);
 }
 
@@ -339,13 +313,12 @@ function applyQuickSelection() {
     const kwaliteit = document.getElementById("kwaliteit").value;
 
     const basePrices = QUICK_PRICES[type][kwaliteit];
-
     const checkboxes = ["keuken", "badkamer", "elektra", "verwarming", "sloopwerk", "dakkapel", "kozijnen", "vloeren", "isolatie", "zonnepanelen"];
 
     checkboxes.forEach(checkbox => {
         const element = document.getElementById(checkbox);
         if (element && element.checked) {
-            const pricePerM2 = basePrices[checkbox] / 40; // Deel door basis m²
+            const pricePerM2 = basePrices[checkbox] / 40;
             const totalPrice = pricePerM2 * m2;
 
             costs.push({
@@ -386,7 +359,7 @@ function render() {
 }
 
 // =========================
-// UPDATE COST (INLINE EDITING)
+// UPDATE COST
 // =========================
 
 function updateCost(index, field, value) {
@@ -404,9 +377,7 @@ function updateCost(index, field, value) {
         costs[index].unitPrice = numValue;
     }
 
-    // Herberekenen totaal
     costs[index].total = costs[index].qty * costs[index].unitPrice;
-    
     render();
 }
 
@@ -415,7 +386,6 @@ function updateCost(index, field, value) {
 // =========================
 
 function updateTotals() {
-
     const direct = costs.reduce((a,b)=>a+b.total,0);
 
     const ak = direct * SETTINGS.ak;
