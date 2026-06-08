@@ -15,8 +15,13 @@ Online Bouwmanager 2026
 
 <header class="header">
     <div class="header-content">
-        <h1>🏗️ Bouwkosten Calculator</h1>
-        <p>Professionele kostenberekening voor uw bouwproject</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div>
+                <h1>🏗️ Bouwkosten Calculator</h1>
+                <p>Professionele kostenberekening voor uw bouwproject</p>
+            </div>
+            <div id="userInfo" style="color: white; text-align: right;"></div>
+        </div>
     </div>
 </header>
 
@@ -36,7 +41,7 @@ Online Bouwmanager 2026
             <option value="1.15">Randstad</option>
         </select>
 
-        <button onclick="saveProject()" class="btn-primary">💾 Opslaan</button>
+        <button onclick="saveProject()" class="btn-primary">💾 Opslaan (Cloud)</button>
     </div>
 
     <div class="card">
@@ -241,6 +246,7 @@ Online Bouwmanager 2026
     <p>&copy; 2026 Cleef Bouwmanagement - Bouwkosten Calculator | Gebouwd met professionele zorg</p>
 </footer>
 
+<script src="auth.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
